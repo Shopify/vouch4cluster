@@ -1,0 +1,333 @@
+hash: 1c4bb4148480f4bf633be3561f796ed74ebea6fe802b419ad30c1185fc5a9bb2
+updated: 2018-09-19T14:16:30.900727-04:00
+imports:
+- name: cloud.google.com/go
+  version: 97efc2c9ffd9fe8ef47f7f3203dc60bbca547374
+  subpackages:
+  - compute/metadata
+  - containeranalysis/apiv1beta1
+  - internal/version
+- name: contrib.go.opencensus.io/exporter/stackdriver
+  version: 9f333b48d3826fe9ed540ba2095c1fbd8514f750
+  subpackages:
+  - propagation
+- name: github.com/beorn7/perks
+  version: 3a771d992973f24aa725d07868b467d1ddfceafb
+  subpackages:
+  - quantile
+- name: github.com/coreos/clair
+  version: 096a44f3bc68d888635cdb8e27bb5894f80d9f7c
+  subpackages:
+  - api/v1
+  - database
+  - ext/featurefmt
+  - ext/featurens
+  - ext/imagefmt
+  - ext/notification
+  - ext/versionfmt
+  - ext/vulnmdsrc
+  - ext/vulnsrc
+  - pkg/commonerr
+  - pkg/stopper
+  - pkg/tarutil
+- name: github.com/coreos/pkg
+  version: 3ac0863d7acf3bc44daf49afef8919af12f704ef
+  subpackages:
+  - timeutil
+- name: github.com/davecgh/go-spew
+  version: d8f796af33cc11cb798c1aaeb27a4ebc5099927d
+  subpackages:
+  - spew
+- name: github.com/docker/distribution
+  version: b089e91688254eb5aef187f188c8ee0ebe4e4675
+  subpackages:
+  - digestset
+  - manifest
+  - manifest/schema2
+  - reference
+- name: github.com/docker/docker
+  version: d6a7c22f7b9aa028623ef8c7cb31d1bb04dd9d84
+  subpackages:
+  - api/types
+  - api/types/blkiodev
+  - api/types/container
+  - api/types/filters
+  - api/types/mount
+  - api/types/network
+  - api/types/registry
+  - api/types/strslice
+  - api/types/swarm
+  - api/types/swarm/runtime
+  - api/types/versions
+  - errdefs
+- name: github.com/docker/go-connections
+  version: 97c2040d34dfae1d1b1275fa3a78dbdd2f41cf7e
+  subpackages:
+  - nat
+- name: github.com/docker/go-units
+  version: 47565b4f722fb6ceae66b95f853feed578a4a51c
+- name: github.com/dustin/gojson
+  version: 2e71ec9dd5adce3b168cd0dbde03b5cc04951c30
+- name: github.com/fernet/fernet-go
+  version: 9eac43b88a5efb8651d24de9b68e87567e029736
+- name: github.com/fsnotify/fsnotify
+  version: ccc981bf80385c528a65fbfdd49bf2d8da22aa23
+- name: github.com/gogo/protobuf
+  version: e14cafb6a2c249986e51c4b65c3206bf18578715
+  subpackages:
+  - proto
+- name: github.com/golang/protobuf
+  version: 6e3d092c77c3bae25acf4925942b568e742c1c20
+  subpackages:
+  - proto
+  - protoc-gen-go/descriptor
+  - ptypes
+  - ptypes/any
+  - ptypes/duration
+  - ptypes/empty
+  - ptypes/timestamp
+- name: github.com/google/uuid
+  version: 9b3b1e0f5f99ae461456d768e7d301a7acdaa2d8
+- name: github.com/googleapis/gax-go
+  version: 1ef592c90f479e3ab30c6c2312e20e13881b7ea6
+- name: github.com/gorilla/mux
+  version: 9e1f5955c0d22b55d9e20d6faa28589f83b2faca
+- name: github.com/hashicorp/hcl
+  version: 65a6292f0157eff210d03ed1bf6c59b190b8b906
+  subpackages:
+  - hcl/ast
+  - hcl/parser
+  - hcl/printer
+  - hcl/scanner
+  - hcl/strconv
+  - hcl/token
+  - json/parser
+  - json/scanner
+  - json/token
+- name: github.com/julienschmidt/httprouter
+  version: 8c199fb6259ffc1af525cc3ad52ee60ba8359669
+- name: github.com/magiconair/properties
+  version: c2353362d570a7bfa228149c62842019201cfb71
+- name: github.com/matttproud/golang_protobuf_extensions
+  version: c12348ce28de40eed0136aa2b644d0ee0650e56c
+  subpackages:
+  - pbutil
+- name: github.com/mitchellh/mapstructure
+  version: fa473d140ef3c6adf42d6b391fe76707f1f243c8
+- name: github.com/opencontainers/go-digest
+  version: 279bed98673dd5bef374d3b6e4b09e2af76183bf
+- name: github.com/opencontainers/image-spec
+  version: 7b1e489870acb042978a3935d2fb76f8a79aff81
+  subpackages:
+  - specs-go
+  - specs-go/v1
+- name: github.com/pborman/uuid
+  version: adf5a7427709b9deb95d29d3fa8a2bf9cfd388f1
+- name: github.com/pelletier/go-toml
+  version: e33f6544292e42cce6432aad20ac1eb020e2a1d8
+- name: github.com/pmezard/go-difflib
+  version: 792786c7400a136282c1664665ae0a8db921c6c2
+  subpackages:
+  - difflib
+- name: github.com/prometheus/client_golang
+  version: c5b7fccd204277076155f10851dad72b76a49317
+  subpackages:
+  - prometheus
+- name: github.com/prometheus/client_model
+  version: 5c3871d89910bfb32f5fcab2aa4b9ec68e65a99f
+  subpackages:
+  - go
+- name: github.com/prometheus/common
+  version: c7de2306084e37d54b8be01f3541a8464345e9a5
+  subpackages:
+  - expfmt
+  - internal/bitbucket.org/ww/goautoneg
+  - model
+- name: github.com/prometheus/procfs
+  version: 05ee40e3a273f7245e8777337fc7b46e533a9a92
+  subpackages:
+  - internal/util
+  - nfs
+  - xfs
+- name: github.com/Shopify/ejson
+  version: a147bd6d34a52d59e0d75b0b5f9bb08317eb4782
+  subpackages:
+  - crypto
+  - json
+- name: github.com/Shopify/voucher
+  version: 34d4e1e47edcd55b5824d3ae3f1365b779587542
+  subpackages:
+  - auth/google
+  - checks/diy
+  - checks/nobody
+  - checks/provenance
+  - checks/snakeoil
+  - clair
+  - client
+  - cmd/config
+  - docker
+  - grafeas
+  - grafeas/binauth
+  - server
+- name: github.com/sirupsen/logrus
+  version: 3e01752db0189b9157070a0e1668a620f9a85da2
+- name: github.com/Sirupsen/logrus
+  version: 3e01752db0189b9157070a0e1668a620f9a85da2
+  repo: git@github.com:/sirupsen/logrus
+  vcs: git
+- name: github.com/spf13/afero
+  version: d40851caa0d747393da1ffb28f7f9d8b4eeffebd
+  subpackages:
+  - mem
+- name: github.com/spf13/cast
+  version: 8965335b8c7107321228e3e3702cab9832751bac
+- name: github.com/spf13/jwalterweatherman
+  version: 4a4406e478ca629068e7768fc33f3f044173c0a6
+- name: github.com/spf13/pflag
+  version: 298182f68c66c05229eb03ac171abe6e309ee79a
+- name: github.com/spf13/viper
+  version: 3171ef9a229903ce60a9513ec3899b63c003e91c
+- name: github.com/stretchr/testify
+  version: f35b8ab0b5a2cef36673838d662e249dd9c94686
+  subpackages:
+  - assert
+- name: go.opencensus.io
+  version: 3500eaa0b5052e968a22daaf854342bfd8717854
+  subpackages:
+  - internal
+  - internal/tagencoding
+  - plugin/ocgrpc
+  - plugin/ochttp
+  - plugin/ochttp/propagation/b3
+  - stats
+  - stats/internal
+  - stats/view
+  - tag
+  - trace
+  - trace/internal
+  - trace/propagation
+  - trace/tracestate
+- name: golang.org/x/crypto
+  version: 0e37d006457bf46f9e6692014ba72ef82c33022c
+  subpackages:
+  - bcrypt
+  - blowfish
+  - cast5
+  - curve25519
+  - internal/subtle
+  - nacl/box
+  - nacl/secretbox
+  - openpgp
+  - openpgp/armor
+  - openpgp/elgamal
+  - openpgp/errors
+  - openpgp/packet
+  - openpgp/s2k
+  - poly1305
+  - salsa20/salsa
+  - ssh/terminal
+- name: golang.org/x/net
+  version: 26e67e76b6c3f6ce91f7c52def5af501b4e0f3a2
+  subpackages:
+  - context
+  - context/ctxhttp
+  - http/httpguts
+  - http2
+  - http2/hpack
+  - idna
+  - internal/timeseries
+  - trace
+- name: golang.org/x/oauth2
+  version: d2e6202438beef2727060aa7cabdd924d92ebfd9
+  subpackages:
+  - google
+  - internal
+  - jws
+  - jwt
+- name: golang.org/x/sys
+  version: 1561086e645b2809fb9f8a1e2a38160bf8d53bf4
+  subpackages:
+  - unix
+  - windows
+- name: golang.org/x/text
+  version: 905a57155faa8230500121607930ebb9dd8e139c
+  subpackages:
+  - secure/bidirule
+  - transform
+  - unicode/bidi
+  - unicode/norm
+- name: google.golang.org/api
+  version: 003c13302b3ea5ae44344459ba080364bd46155f
+  subpackages:
+  - googleapi/transport
+  - internal
+  - iterator
+  - iterator
+  - option
+  - transport
+  - transport/grpc
+  - transport/http
+- name: google.golang.org/appengine
+  version: ae0ab99deb4dc413a2b4bd6c8bdd0eb67f1e4d06
+  subpackages:
+  - internal
+  - internal/app_identity
+  - internal/base
+  - internal/datastore
+  - internal/log
+  - internal/modules
+  - internal/remote_api
+  - internal/socket
+  - internal/urlfetch
+  - socket
+  - urlfetch
+- name: google.golang.org/genproto
+  version: c3f76f3b92d1ffa4c58a9ff842a58b8877655e0f
+  subpackages:
+  - googleapis/api/annotations
+  - googleapis/devtools/containeranalysis/v1beta1
+  - googleapis/devtools/containeranalysis/v1beta1/attestation
+  - googleapis/devtools/containeranalysis/v1beta1/build
+  - googleapis/devtools/containeranalysis/v1beta1/common
+  - googleapis/devtools/containeranalysis/v1beta1/deployment
+  - googleapis/devtools/containeranalysis/v1beta1/discovery
+  - googleapis/devtools/containeranalysis/v1beta1/grafeas
+  - googleapis/devtools/containeranalysis/v1beta1/image
+  - googleapis/devtools/containeranalysis/v1beta1/package
+  - googleapis/devtools/containeranalysis/v1beta1/provenance
+  - googleapis/devtools/containeranalysis/v1beta1/source
+  - googleapis/devtools/containeranalysis/v1beta1/vulnerability
+  - googleapis/iam/v1
+  - googleapis/rpc/status
+  - protobuf/field_mask
+- name: google.golang.org/grpc
+  version: 24f3cca1ffddeab04708c325f8088c76c2d74972
+  subpackages:
+  - balancer
+  - balancer/base
+  - balancer/roundrobin
+  - channelz
+  - codes
+  - connectivity
+  - credentials
+  - credentials/oauth
+  - encoding
+  - encoding/proto
+  - grpclog
+  - internal
+  - internal/backoff
+  - internal/grpcrand
+  - keepalive
+  - metadata
+  - naming
+  - peer
+  - resolver
+  - resolver/dns
+  - resolver/passthrough
+  - stats
+  - status
+  - tap
+  - transport
+- name: gopkg.in/yaml.v2
+  version: 5420a8b6744d3b0345ab293f6fcba19c978f1183
+testImports: []
