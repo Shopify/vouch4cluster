@@ -8,21 +8,16 @@ import (
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
 )
 
-func fromKubernetes(path string) ([]string, error) {
-	kubeconfig, err := clientcmd.NewNonInteractiveDeferredLoadingClientConfig(
-		&clientcmd.ClientConfigLoadingRules{ExplicitPath: path},
-		&clientcmd.ConfigOverrides{ClusterInfo: clientcmdapi.Cluster{Server: ""}},
-	).ClientConfig()
-	if nil != err {
-		return []string{}, nil
-	}
+// k8sImageLister lists images running in Kubernetes.
+type k8sImageLister struct {
+	path   string
+	client *kubernetes.Clientset
+}
 
-	clientset, err := kubernetes.NewForConfig(kubeconfig)
-	if nil != err {
-		return []string{}, nil
-	}
-
-	pods, err := clientset.CoreV1().Pods("").List(metav1.ListOptions{})
+// List returns a list of all of the images available to the current Kubernetes context,
+// or an error.
+func (k *k8sImageLister) List() ([]string, error) {
+	pods, err := k.client.CoreV1().Pods("").List(metav1.ListOptions{})
 	if nil != err {
 		return []string{}, nil
 	}
@@ -44,4 +39,20 @@ func fromKubernetes(path string) ([]string, error) {
 	}
 
 	return uniqueImages, err
+}
+
+// NewK8SImageLister creates a new Kubernetes specific ImageLister
+func NewK8SImageLister(path string) (ImageLister, error) {
+	k := new(k8sImageLister)
+
+	kubeconfig, err := clientcmd.NewNonInteractiveDeferredLoadingClientConfig(
+		&clientcmd.ClientConfigLoadingRules{ExplicitPath: k.path},
+		&clientcmd.ConfigOverrides{ClusterInfo: clientcmdapi.Cluster{Server: ""}},
+	).ClientConfig()
+	if nil != err {
+		return nil, err
+	}
+
+	k.client, err = kubernetes.NewForConfig(kubeconfig)
+	return k, err
 }

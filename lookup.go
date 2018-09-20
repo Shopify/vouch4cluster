@@ -3,100 +3,98 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"strings"
 	"time"
 
 	"github.com/Shopify/voucher"
 	"github.com/Shopify/voucher/auth/google"
 	"github.com/Shopify/voucher/client"
-	"github.com/docker/distribution/reference"
 )
 
-func lookupAndAttest(images []string) error {
+func lookupAndAttest(lister ImageLister, output io.Writer) error {
 
 	auth := google.NewAuth()
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3600*time.Second)
 	defer cancel()
 
+	images, err := lister.List()
+	if nil != err {
+		fmt.Printf("listing images failed: %s\n", err)
+	}
+
+	processor := processor{
+		ctx:  ctx,
+		auth: auth,
+	}
+
 	for _, image := range images {
-		err := processImage(ctx, auth, image)
+		vClient, err := client.NewClient("https://voucher-internal.shopifycloud.com", 120*time.Second)
+		if nil != err {
+			fmt.Printf("could not setup client: %s\n", err)
+		}
+
+		err = processor.Process(vClient, image)
 		if nil != err {
 			fmt.Printf("processing image failed: %s\n", err)
 		}
 
 	}
 
+	_ = writeProcessResult(&processor, output)
 	return nil
 }
 
-func processImage(ctx context.Context, auth voucher.Auth, image string) error {
-	if !strings.HasPrefix(image, "gcr.io/shopify-docker-images") {
-		return fmt.Errorf("image is not in our registry: %s", image)
-	}
+// processor handles the images returned by the ImageLister.
+type processor struct {
+	ctx           context.Context
+	auth          voucher.Auth
+	successes     []voucher.CheckResult
+	failures      []voucher.CheckResult
+	unprocessible []string
+	thirdParty    []string
+}
 
-	fmt.Printf("Attesting %s\n", image)
+// processImage processes the passed image.
+func (p *processor) Process(vClient *client.VoucherClient, image string) error {
+	if !strings.HasPrefix(image, "gcr.io/shopify-docker-images") {
+		p.thirdParty = append(p.thirdParty, image)
+		return nil
+	}
 
 	namedRef, err := parseReference(image)
 	if nil != err {
+		p.unprocessible = append(p.unprocessible, image)
 		return fmt.Errorf("getting reference failed: %s", err)
 	}
 
-	voucherClient, err := auth.ToClient(ctx, namedRef)
+	authClient, err := p.auth.ToClient(p.ctx, namedRef)
 	if nil != err {
+		p.unprocessible = append(p.unprocessible, image)
 		return fmt.Errorf("creating authenticated client failed: %s", err)
 	}
 
-	canonicalRef, err := getCanonicalReference(voucherClient, namedRef)
+	canonicalRef, err := getCanonicalReference(authClient, namedRef)
 	if nil != err {
+		p.unprocessible = append(p.unprocessible, image)
 		return fmt.Errorf("getting image digest failed: %s", err)
 	}
-	fmt.Printf(" - Canonical Image: %s\n", canonicalRef.String())
 
-	voucherResp, err := client.SignImage("https://voucher-internal.shopifycloud.com", canonicalRef, "all")
+	voucherResp, err := vClient.Check("all", canonicalRef)
 	if nil != err {
+		p.unprocessible = append(p.unprocessible, image)
 		return fmt.Errorf("signing image failed: %s", err)
 	}
 
-	fmt.Println(formatResponse(&voucherResp))
+	for _, result := range voucherResp.Results {
+		result.ImageData = voucher.ImageData(canonicalRef)
+		if result.Attested {
+			p.successes = append(p.successes, result)
+		} else {
+			p.failures = append(p.failures, result)
+		}
+	}
 
 	return nil
-}
-
-func parseReference(image string) (reference.Named, error) {
-	var namedRef reference.Named
-	var ok bool
-
-	ref, err := reference.Parse(image)
-	if nil != err {
-		return namedRef, fmt.Errorf("parsing image reference failed: %s", err)
-	}
-
-	if namedRef, ok = ref.(reference.Named); !ok {
-		return namedRef, fmt.Errorf("couldn't get named version of reference: %s", err)
-	}
-
-	return namedRef, nil
-}
-
-// formatResponse returns the response as a string.
-func formatResponse(resp *voucher.Response) string {
-	output := "checks status: \n"
-	for _, result := range resp.Results {
-		if result.Success && "" == result.Err {
-			continue
-		}
-		if !result.Success {
-			output += fmt.Sprintf(" - %s failed", result.Name)
-		} else if !result.Attested {
-			output += fmt.Sprintf(" - %s wasn't attested", result.Name)
-		}
-
-		if "" != result.Err {
-			output += fmt.Sprintf(", err: %s", result.Err)
-		}
-		output += "\n"
-	}
-
-	return output
 }
