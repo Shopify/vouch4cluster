@@ -4,12 +4,9 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"time"
 )
 
-const timeout = 120 * time.Second
-
-func main() {
+func fromStdin() {
 	images := make([]string, 0)
 
 	scanner := bufio.NewScanner(os.Stdin)
@@ -21,5 +18,20 @@ func main() {
 		fmt.Printf("scanning failed: %s", err)
 	}
 
-	lookupAndAttest(images...)
+}
+
+func main() {
+
+	images, err := fromKubernetes(os.Getenv("HOME") + "/.kube/config")
+	if nil != err {
+		fmt.Printf("getting images failed: %s", err)
+		os.Exit(1)
+	}
+
+	err = lookupAndAttest(images)
+	if nil != err {
+		fmt.Printf("attesting images failed: %s", err)
+		os.Exit(1)
+	}
+
 }

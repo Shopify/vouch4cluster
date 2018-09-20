@@ -12,17 +12,17 @@ import (
 	"github.com/docker/distribution/reference"
 )
 
-func lookupAndAttest(images ...string) error {
+func lookupAndAttest(images []string) error {
 
 	auth := google.NewAuth()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 600*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 3600*time.Second)
 	defer cancel()
 
 	for _, image := range images {
 		err := processImage(ctx, auth, image)
 		if nil != err {
-			return fmt.Errorf("processing image failed: %s", err)
+			fmt.Printf("processing image failed: %s\n", err)
 		}
 
 	}
@@ -31,7 +31,7 @@ func lookupAndAttest(images ...string) error {
 }
 
 func processImage(ctx context.Context, auth voucher.Auth, image string) error {
-	if !strings.HasPrefix(image, "gcr.io") {
+	if !strings.HasPrefix(image, "gcr.io/shopify-docker-images") {
 		return fmt.Errorf("image is not in our registry: %s", image)
 	}
 
