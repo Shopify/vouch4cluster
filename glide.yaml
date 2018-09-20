@@ -3,29 +3,11 @@ import:
 - package: github.com/Shopify/voucher
   version: voucher-test-improvements
   subpackages:
-  - auth/google
   - client
-  - docker
 - package: github.com/docker/distribution/reference
-  version: master
-- package: github.com/docker/docker
   version: master
 - package: github.com/opencontainers/go-digest
   version: ^1.0.0-rc1
-- package: github.com/coreos/clair
-  version: ^2.0.5
-  subpackages:
-  - api/v1
-- package: cloud.google.com/go/containeranalysis/apiv1beta1
-  version: ^0.28.0
-- package: google.golang.org/api/iterator
-  version: 003c13302b3ea5ae44344459ba080364bd46155f
-  subpackages:
-  - iterator
-  - option
-  - transport
-- package: google.golang.org/grpc/status
-  version: 24f3cca1ffddeab04708c325f8088c76c2d74972
 - package: github.com/sirupsen/logrus
   version: ^1.0.6
 - package: github.com/Sirupsen/logrus
