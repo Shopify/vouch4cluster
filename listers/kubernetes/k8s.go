@@ -1,16 +1,18 @@
-package main
+package kubernetes
 
 import (
+	"github.com/Shopify/vouch4cluster/listers"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
-	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 	"k8s.io/client-go/tools/clientcmd"
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
+
+	// add GCP authentication support to the kubernetes code
+	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 )
 
 // k8sImageLister lists images running in Kubernetes.
 type k8sImageLister struct {
-	path   string
 	client *kubernetes.Clientset
 }
 
@@ -41,12 +43,12 @@ func (k *k8sImageLister) List() ([]string, error) {
 	return uniqueImages, err
 }
 
-// NewK8SImageLister creates a new Kubernetes specific ImageLister
-func NewK8SImageLister(path string) (ImageLister, error) {
+// NewImageLister creates a new Kubernetes specific ImageLister
+func NewImageLister(configFilename string) (listers.ImageLister, error) {
 	k := new(k8sImageLister)
 
 	kubeconfig, err := clientcmd.NewNonInteractiveDeferredLoadingClientConfig(
-		&clientcmd.ClientConfigLoadingRules{ExplicitPath: k.path},
+		&clientcmd.ClientConfigLoadingRules{ExplicitPath: configFilename},
 		&clientcmd.ConfigOverrides{ClusterInfo: clientcmdapi.Cluster{Server: ""}},
 	).ClientConfig()
 	if nil != err {

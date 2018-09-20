@@ -1,12 +1,14 @@
-package main
+package reader
 
 import (
 	"bufio"
 	"fmt"
 	"io"
+
+	"github.com/Shopify/vouch4cluster/listers"
 )
 
-// readerImageLister is an implementation of ImageLister which reads
+// readerImageLister is an implementation of listers.ImageLister which reads
 // Images from a file.
 type readerImageLister struct {
 	reader io.Reader
@@ -28,9 +30,9 @@ func (r *readerImageLister) List() ([]string, error) {
 	return images, nil
 }
 
-// NewReaderImageLister creates a new ImageLister that reads from an
+// NewImageLister creates a new listers.ImageLister that reads from an
 // io.Reader.
-func NewReaderImageLister(reader io.Reader) ImageLister {
+func NewImageLister(reader io.Reader) listers.ImageLister {
 	lister := new(readerImageLister)
 	lister.reader = reader
 	return lister
