@@ -35,7 +35,7 @@ func LookupAndAttest(lister listers.ImageLister, output io.Writer) error {
 	totalImages := len(images)
 
 	for i, image := range images {
-		fmt.Printf("- handling image (%d/%d)\n", i, totalImages)
+		fmt.Printf("- handling image (%d/%d)\n", i+1, totalImages)
 		vClient, err := client.NewClient("https://voucher-internal.shopifycloud.com", 120*time.Second)
 		if nil != err {
 			fmt.Printf("   - could not setup client: %s\n", err)
