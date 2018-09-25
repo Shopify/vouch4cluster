@@ -34,7 +34,12 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.vouch4cluster.yaml)")
-
+	rootCmd.PersistentFlags().StringVar(&defaultConfig.Hostname, "voucher", "v", "Voucher server to connect to.")
+	viper.BindPFlag("voucher.hostname", rootCmd.PersistentFlags().Lookup("voucher"))
+	rootCmd.PersistentFlags().StringVar(&defaultConfig.Username, "username", "", "Username to authenticate against Voucher with")
+	viper.BindPFlag("voucher.username", rootCmd.PersistentFlags().Lookup("username"))
+	rootCmd.PersistentFlags().StringVar(&defaultConfig.Password, "password", "", "Password to authenticate against Voucher with")
+	viper.BindPFlag("voucher.password", rootCmd.PersistentFlags().Lookup("password"))
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -60,6 +65,10 @@ func initConfig() {
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
+		if err = viper.UnmarshalKey("voucher", &defaultConfig); nil != err {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	}
 }
 

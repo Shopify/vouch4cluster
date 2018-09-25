@@ -15,7 +15,7 @@ import (
 
 // LookupAndAttest takes a listers.ImageLister and handles them, writing the output
 // of the results to the passed io.Writer.
-func LookupAndAttest(lister listers.ImageLister, output io.Writer) error {
+func LookupAndAttest(cfg *VoucherConfig, lister listers.ImageLister, output io.Writer) error {
 
 	auth := google.NewAuth()
 
@@ -36,7 +36,7 @@ func LookupAndAttest(lister listers.ImageLister, output io.Writer) error {
 
 	for i, image := range images {
 		fmt.Printf("- handling image (%d/%d)\n", i+1, totalImages)
-		vClient, err := client.NewClient("https://voucher-internal.shopifycloud.com", 120*time.Second)
+		vClient, err := newVoucherClient(ctx, cfg)
 		if nil != err {
 			fmt.Printf("   - could not setup client: %s\n", err)
 		}

@@ -19,9 +19,11 @@ var readerCmd = &cobra.Command{
 separated by newlines.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		var err error
+		cfg := getVoucherCfg()
+
 		lister := reader.NewImageLister(inputReader)
 
-		err = process.LookupAndAttest(lister, os.Stdout)
+		err = process.LookupAndAttest(cfg, lister, os.Stdout)
 		if nil != err {
 			errorf("attesting images failed: %s", err)
 			os.Exit(1)

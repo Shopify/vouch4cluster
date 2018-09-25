@@ -28,6 +28,8 @@ var kubeCmd = &cobra.Command{
 			kubeCfgFile = home + "/.kube/config"
 		}
 
+		cfg := getVoucherCfg()
+
 		var err error
 		k8sLister, err := kubernetes.NewImageLister(kubeCfgFile)
 		if nil != err {
@@ -35,7 +37,7 @@ var kubeCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		err = process.LookupAndAttest(k8sLister, os.Stdout)
+		err = process.LookupAndAttest(cfg, k8sLister, os.Stdout)
 		if nil != err {
 			fmt.Printf("attesting images failed: %s\n", err)
 			os.Exit(1)
