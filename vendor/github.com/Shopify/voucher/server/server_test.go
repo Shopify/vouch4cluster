@@ -22,12 +22,17 @@ const testPassword = "testingvoucher"
 const testPasswordHash = "$2a$10$.PaOjV8GdqSHSmUtfolsJeF6LsAq/3CNsFCYGb3IoN/mO9xj1c/yG"
 
 func TestMain(m *testing.M) {
-	config.FileName = "../testdata/config.toml"
+	config.FileName = "../tests/fixtures/config.toml"
 
 	config.InitConfig()
 
-	viper.Set("server.username", testUsername)
-	viper.Set("server.password", testPasswordHash)
+	serverConfig = &Config{
+		Port:        viper.GetInt("server.port"),
+		Timeout:     viper.GetInt("server.timeout"),
+		RequireAuth: true,
+		Username:    testUsername,
+		PassHash:    testPasswordHash,
+	}
 
 	os.Exit(m.Run())
 }

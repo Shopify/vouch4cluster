@@ -38,6 +38,7 @@ type logT interface {
 }
 
 const defaultDockerdBinary = "dockerd"
+const containerdSocket = "/var/run/docker/containerd/containerd.sock"
 
 var errDaemonNotStarted = errors.New("daemon not started")
 
@@ -111,12 +112,13 @@ func New(t testingT, ops ...func(*Daemon)) *Daemon {
 		}
 	}
 	d := &Daemon{
-		id:              id,
-		Folder:          daemonFolder,
-		Root:            daemonRoot,
-		storageDriver:   storageDriver,
-		userlandProxy:   userlandProxy,
-		execRoot:        filepath.Join(os.TempDir(), "docker-execroot", id),
+		id:            id,
+		Folder:        daemonFolder,
+		Root:          daemonRoot,
+		storageDriver: storageDriver,
+		userlandProxy: userlandProxy,
+		// dxr stands for docker-execroot (shortened for avoiding unix(7) path length limitation)
+		execRoot:        filepath.Join(os.TempDir(), "dxr", id),
 		dockerdBinary:   defaultDockerdBinary,
 		swarmListenAddr: defaultSwarmListenAddr,
 		SwarmPort:       DefaultSwarmPort,
@@ -224,7 +226,7 @@ func (d *Daemon) StartWithLogFile(out *os.File, providedArgs ...string) error {
 		return errors.Wrapf(err, "[%s] could not find docker binary in $PATH", d.id)
 	}
 	args := append(d.GlobalFlags,
-		"--containerd", "/var/run/docker/containerd/docker-containerd.sock",
+		"--containerd", containerdSocket,
 		"--data-root", d.Root,
 		"--exec-root", d.execRoot,
 		"--pidfile", fmt.Sprintf("%s/docker.pid", d.Folder),

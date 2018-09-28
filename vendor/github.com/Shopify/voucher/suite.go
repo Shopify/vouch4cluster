@@ -2,7 +2,8 @@ package voucher
 
 // Suite is a suite of Checks, which
 type Suite struct {
-	checks map[string]Check
+	checks  map[string]Check
+	Scanner VulnerabilityScanner
 }
 
 // Add adds a Check to the checks that can be run. Once a Check is added,
@@ -43,7 +44,7 @@ func (cs *Suite) Run(imageData ImageData) []CheckResult {
 		if err == nil {
 			results = append(results, CheckResult{Name: name, Err: "", Success: ok, ImageData: imageData})
 		} else {
-			results = append(results, CheckResult{Name: name, Err: err.Error(), Success: false, ImageData: imageData})
+			results = append(results, CheckResult{Name: name, Err: err.Error(), Success: ok, ImageData: imageData})
 		}
 	}
 	return results

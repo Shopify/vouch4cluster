@@ -498,12 +498,6 @@ func setMounts(daemon *Daemon, s *specs.Spec, c *container.Container, mounts []c
 
 	s.Mounts = defaultMounts
 	for _, m := range mounts {
-		for _, cm := range s.Mounts {
-			if cm.Destination == m.Destination {
-				return duplicateMountPointError(m.Destination)
-			}
-		}
-
 		if m.Source == "tmpfs" {
 			data := m.Data
 			parser := volumemounts.NewParser("linux")
@@ -809,7 +803,7 @@ func (daemon *Daemon) createSpec(c *container.Container) (retSpec *specs.Spec, e
 			s.Hooks = &specs.Hooks{
 				Prestart: []specs.Hook{{
 					Path: target,
-					Args: []string{"libnetwork-setkey", c.ID, daemon.netController.ID()},
+					Args: []string{"libnetwork-setkey", "-exec-root=" + daemon.configStore.GetExecRoot(), c.ID, daemon.netController.ID()},
 				}},
 			}
 		}

@@ -48,20 +48,3 @@ func TestVoucherURL(t *testing.T) {
 		t.Errorf("url is incorrect, should be \"%s\" instead of \"%s\"", "/all", allEmptyURL)
 	}
 }
-
-func TestVoucherBasicAuth(t *testing.T) {
-	client, err := NewClient("localhost", 50*time.Second)
-	if nil != err {
-		t.Fatal("failed to create client: ", err)
-	}
-
-	if client.username != "" || client.password != "" {
-		t.Fatal("username or password already set in client")
-	}
-
-	client.SetBasicAuth("username", "password")
-
-	if client.username != "username" || client.password != "password" {
-		t.Fatal("username or password not correctly set in client")
-	}
-}
