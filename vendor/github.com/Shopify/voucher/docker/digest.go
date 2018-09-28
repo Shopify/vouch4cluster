@@ -1,7 +1,6 @@
 package docker
 
 import (
-	"errors"
 	"net/http"
 
 	"github.com/docker/distribution/manifest/schema2"
@@ -26,16 +25,8 @@ func GetDigestFromTagged(client *http.Client, image reference.NamedTagged) (dige
 		return blank, err
 	}
 
-	if resp.StatusCode >= 300 {
-		return blank, responseToError(resp)
-	}
-
 	_ = resp.Body.Close()
 
-	imageDigest := digest.Digest(resp.Header.Get("Docker-Content-Digest"))
-	if "" == string(imageDigest) {
-		return blank, errors.New("empty digest returned for image")
-	}
+	return digest.Digest(resp.Header.Get("Docker-Content-Digest")), nil
 
-	return imageDigest, nil
 }

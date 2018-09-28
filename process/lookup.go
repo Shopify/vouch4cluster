@@ -75,7 +75,7 @@ func (p *processor) Process(vClient *client.VoucherClient, image string) error {
 		return fmt.Errorf("getting reference failed: %s", err)
 	}
 
-	authClient, err := p.auth.ToClient(p.ctx, namedRef)
+	authClient, err := voucher.AuthToClient(p.ctx, p.auth, namedRef)
 	if nil != err {
 		p.unprocessible = append(p.unprocessible, image)
 		return fmt.Errorf("creating authenticated client failed: %s", err)

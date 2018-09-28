@@ -1,14 +1,11 @@
 package voucher
 
-import (
-	"strings"
-	"testing"
-)
+import "testing"
 
 func TestAttestationPayload(t *testing.T) {
 	payloadMessage := "test was successful"
 
-	keyring := newTestKeyRing(t)
+	keyring := newKeyring(t)
 
 	payload := AttestationPayload{
 		CheckName: "snakeoil",
@@ -33,19 +30,4 @@ func TestAttestationPayload(t *testing.T) {
 		t.Fatalf("Failed to get correct message, was \"%s\" instead of \"%s\"", message, payloadMessage)
 	}
 
-}
-
-func TestAttestationPayloadWithEmptyKeyRing(t *testing.T) {
-	var keyring *KeyRing = nil
-
-	payload := AttestationPayload{
-		CheckName: "snakeoil",
-		Body:      "this should fail",
-	}
-
-	// try to sign with
-	_, _, err := payload.Sign(keyring)
-	if !strings.Contains(err.Error(), errEmptyKeyring.Error()) {
-		t.Fatalf("Did not return correct error when signing with empty keyring: %s", err)
-	}
 }

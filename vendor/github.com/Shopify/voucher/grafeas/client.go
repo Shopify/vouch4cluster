@@ -8,6 +8,7 @@ import (
 	"github.com/Shopify/voucher"
 	binauth "github.com/Shopify/voucher/grafeas/binauth"
 	"github.com/docker/distribution/reference"
+	"google.golang.org/api/iterator"
 	"google.golang.org/genproto/googleapis/devtools/containeranalysis/v1beta1/attestation"
 	"google.golang.org/genproto/googleapis/devtools/containeranalysis/v1beta1/common"
 	grafeaspb "google.golang.org/genproto/googleapis/devtools/containeranalysis/v1beta1/grafeas"
@@ -43,6 +44,7 @@ func (g *Client) GetMetadata(reference reference.Canonical, metadataType voucher
 	if err != nil {
 		return
 	}
+	defer c.Close()
 
 	filterStr := resourceURL(reference)
 
@@ -53,14 +55,22 @@ func (g *Client) GetMetadata(reference reference.Canonical, metadataType voucher
 
 	project := projectPath(g.imageProject)
 	req := &grafeaspb.ListOccurrencesRequest{Parent: project, Filter: filterStr}
-	iterator := c.ListOccurrences(g.ctx, req)
-	for occ, complete := iterator.Next(); complete == nil; occ, complete = iterator.Next() {
+	occIterator := c.ListOccurrences(g.ctx, req)
+	for {
+		var occ *grafeaspb.Occurrence
+		occ, err = occIterator.Next()
+		if nil != err {
+			if iterator.Done == err {
+				err = nil
+			}
+			break
+		}
 		item := new(Item)
 		item.Occurrence = occ
 		items = append(items, item)
 	}
 
-	if 0 == len(items) {
+	if 0 == len(items) && nil == err {
 		err = errNoOccurrences
 	}
 
@@ -97,6 +107,7 @@ func (g *Client) getOccurrenceAttestation(signature string, keyID string) *grafe
 	pgpKeyID := attestation.PgpSignedAttestation_PgpKeyId{
 		PgpKeyId: keyID,
 	}
+
 	pgpSignedAttestation := attestation.PgpSignedAttestation{
 		Signature:   signature,
 		ContentType: attestation.PgpSignedAttestation_SIMPLE_SIGNING_JSON,
@@ -110,22 +121,24 @@ func (g *Client) getOccurrenceAttestation(signature string, keyID string) *grafe
 	newAttestation := attestation.Attestation{
 		Signature: &attestationPgpSignedAttestation,
 	}
+
 	details := attestation.Details{
 		Attestation: &newAttestation,
 	}
+
 	occurrenceAttestation := grafeaspb.Occurrence_Attestation{
 		Attestation: &details,
 	}
+
 	return &occurrenceAttestation
 }
 
 func (g *Client) getCreateOccurrenceRequest(reference reference.Reference, parentNoteID string, attestation *grafeaspb.Occurrence_Attestation) *grafeaspb.CreateOccurrenceRequest {
 	binauthProjectPath := "projects/" + g.binauthProject
 	noteName := binauthProjectPath + "/notes/" + parentNoteID
-	resourceURL := "https://" + reference.String()
 
 	resource := grafeaspb.Resource{
-		Uri: resourceURL,
+		Uri: "https://" + reference.String(),
 	}
 
 	occurrence := grafeaspb.Occurrence{NoteName: noteName, Resource: &resource, Details: attestation}

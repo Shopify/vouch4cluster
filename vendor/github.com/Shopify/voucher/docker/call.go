@@ -2,8 +2,6 @@ package docker
 
 import (
 	"encoding/json"
-	"errors"
-	"io/ioutil"
 	"net/http"
 )
 
@@ -17,15 +15,5 @@ func doDockerCall(client *http.Client, request *http.Request, data interface{}) 
 
 	defer resp.Body.Close()
 
-	if resp.StatusCode >= 300 {
-		return responseToError(resp)
-	}
-
 	return json.NewDecoder(resp.Body).Decode(&data)
-}
-
-// responseToError converts the body of a response to an error.
-func responseToError(resp *http.Response) error {
-	b, _ := ioutil.ReadAll(resp.Body)
-	return errors.New("failed to load resource with status \"" + resp.Status + "\": " + string(b))
 }

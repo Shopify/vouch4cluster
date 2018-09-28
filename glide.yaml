@@ -1,7 +1,7 @@
 package: github.com/Shopify/vouch4cluster
 import:
 - package: github.com/Shopify/voucher
-  version: voucher-test-improvements
+  version: master
   subpackages:
   - client
 - package: github.com/docker/distribution/reference
@@ -14,3 +14,6 @@ import:
   repo: git@github.com:/sirupsen/logrus
   vcs: git
   version: ^1.0.6
+- package: k8s.io/client-go/kubernetes
+  version: release-9.0
+
