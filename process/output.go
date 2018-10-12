@@ -16,13 +16,20 @@ func writeProcessResult(processor *processor, output io.Writer) error {
 
 	_, _ = fmt.Fprintln(output, "--- Failures ---")
 	for _, failure := range processor.failures {
+		_, _ = fmt.Fprint(output, failure.ImageData)
 		if failure.Success {
-			_, _ = fmt.Fprintf(output, "%s (passed %s, but attestation failed: %s)\n", failure.ImageData, failure.Name, failure.Err)
-		} else {
+			_, _ = fmt.Fprintf(output, "(passed %s,", failure.Name)
 			if "" == failure.Err {
-				_, _ = fmt.Fprintf(output, "%s (failed %s check)\n", failure.ImageData, failure.Name)
+				_, _ = fmt.Fprint(output, " but wasn't attested)\n")
 			} else {
-				_, _ = fmt.Fprintf(output, "%s (failed %s: %s)\n", failure.ImageData, failure.Name, failure.Err)
+				_, _ = fmt.Fprintf(output, " but attestation failed: %s)\n", failure.Err)
+			}
+		} else {
+			_, _ = fmt.Fprintf(output, "(failed %s", failure.Name)
+			if "" == failure.Err {
+				_, _ = fmt.Fprint(output, " check)\n")
+			} else {
+				_, _ = fmt.Fprintf(output, ": %s)\n", failure.Err)
 			}
 		}
 	}
