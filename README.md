@@ -13,13 +13,15 @@ $ go get -u github.com/Shopify/vouch4cluster
 
 vouch4cluster is configured using either json, yaml, or toml. By default, vouch4cluster loads from `~/.vouch4cluster.{json,yaml,toml}`, but you can also specify the configuration to read from with the `--config` flag.
 
+Below are the configuration options for vouch4cluster:
+
 | Group        | Key           | Description                                        |
 | :----------- | :------------ | :------------------------------------------------- |
 | `voucher`    | `hostname`    | The address of the Voucher instance to connect to. |
 | `voucher`    | `username`    | The username to connect as.                        |
 | `voucher`    | `password`    | The password to authenticate with.                 |
 
-For example:
+For example, a json encoded version of this configuration may look like this:
 
 ```json
 {
@@ -31,7 +33,16 @@ For example:
 }
 ```
 
-## Using
+`vouch4cluster` supports the following flags:
+
+| Flag         | Short Flag | Description                                           |
+| :--------    | :--------- | :---------------------------------------------------- |
+| `--config`   |            | The path to a configuration file that should be used. |
+| `--voucher`  |            | The address of the Voucher instance to connect to.    |
+| `--username` |            | The username to connect as.                           |
+| `--password` |            | The password to authenticate with.                    |
+
+## Using vouch4cluster
 
 ### Attest all images in the current Kubernetes context
 
@@ -41,7 +52,13 @@ To attest all images in the current Kubernetes context, use:
 $ vouch4cluster kube
 ```
 
-This will query kubernetes for all of the active images, and then run each image through voucher.
+This will query kubernetes for all of the active images, and then run each image through voucher. By default, this uses `$HOME/.kube/config`.
+
+`vouch4cluster` supports the following flags, in addition to the global flags described in [Configuration](#configuration):
+
+| Flag           | Short Flag  | Description                                                   |
+| :--------      | :---------- | :------------------------------------------------------------ |
+| `--kubeconfig` | `-k`        | The path to the Kubernetes configuration that should be used. |
 
 ### Attest all images from a file
 
@@ -53,4 +70,3 @@ $ vouch4cluster reader < input
 ```
 
 This will iterate through each line in the file, and run each image through voucher.
-
