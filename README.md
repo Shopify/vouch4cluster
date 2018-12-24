@@ -9,6 +9,27 @@ Install using:
 ```
 $ go get -u github.com/Shopify/vouch4cluster
 ``` 
+## Configuration
+
+vouch4cluster is configured using either json, yaml, or toml. By default, vouch4cluster loads from `~/.vouch4cluster.{json,yaml,toml}`, but you can also specify the configuration to read from with the `--config` flag.
+
+| Group        | Key           | Description                                        |
+| :----------- | :------------ | :------------------------------------------------- |
+| `voucher`    | `hostname`    | The address of the Voucher instance to connect to. |
+| `voucher`    | `username`    | The username to connect as.                        |
+| `voucher`    | `password`    | The password to authenticate with.                 |
+
+For example:
+
+```json
+{
+   "voucher": {
+       "hostname": "https://<voucher address>",
+       "username": "<username>", 
+       "password": "<password>"
+   }
+}
+```
 
 ## Using
 
