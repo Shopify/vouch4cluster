@@ -1,6 +1,7 @@
 # vouch4cluster 🎟☁️ 
 
-vouch4cluster is a tool for running voucher against all of the images running in a cluster or deployment.
+vouch4cluster is a tool for running voucher against all of the images running
+in a cluster or deployment.
 
 ## Installing
 
@@ -9,9 +10,14 @@ Install using:
 ```
 $ go get -u github.com/Shopify/vouch4cluster
 ``` 
-## Configuration
 
-vouch4cluster is configured using either json, yaml, or toml. By default, vouch4cluster loads from `~/.vouch4cluster.{json,yaml,toml}`, but you can also specify the configuration to read from with the `--config` flag.
+## Using vouch4cluster
+
+### Configuration
+
+vouch4cluster is configured using either json, yaml, or toml. By default,
+vouch4cluster loads from `~/.vouch4cluster.{json,yaml,toml}`, but you can also
+specify the configuration to read from with the `--config` flag.
 
 Below are the configuration options for vouch4cluster:
 
@@ -42,8 +48,6 @@ For example, a json encoded version of this configuration may look like this:
 | `--username` |            | The username to connect as.                           |
 | `--password` |            | The password to authenticate with.                    |
 
-## Using vouch4cluster
-
 ### Attest all images in the current Kubernetes context
 
 To attest all images in the current Kubernetes context, use: 
@@ -52,9 +56,11 @@ To attest all images in the current Kubernetes context, use:
 $ vouch4cluster kube
 ```
 
-This will query kubernetes for all of the active images, and then run each image through voucher. By default, this uses `$HOME/.kube/config`.
+This will query kubernetes for all of the active images, and then run each
+image through voucher. By default, this uses `$HOME/.kube/config`.
 
-`vouch4cluster` supports the following flags, in addition to the global flags described in [Configuration](#configuration):
+`vouch4cluster` supports the following flags, in addition to the global flags
+described in [Configuration](#configuration):
 
 | Flag           | Short Flag  | Description                                                   |
 | :--------      | :---------- | :------------------------------------------------------------ |
@@ -62,11 +68,18 @@ This will query kubernetes for all of the active images, and then run each image
 
 ### Attest all images from a file
 
-If you have a list of images that need to be attested, you can put them in a file, newline separated,
-and pass that file to vouch4cluster. By default, vouch4cluster will read from standard input.
+If you have a list of images that need to be attested, you can put them in a
+file, newline separated, and pass that file to vouch4cluster. By default,
+vouch4cluster will read from standard input.
 
 ```
 $ vouch4cluster reader < input
 ```
 
-This will iterate through each line in the file, and run each image through voucher.
+This will iterate through each line in the file, and run each image through
+voucher.
+
+## Contributing
+
+Please take a look at the [Contributing document](CONTRIBUTING.md) if you're interested
+in contributing code back to vouch4cluster!
