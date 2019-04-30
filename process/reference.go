@@ -6,6 +6,8 @@ import (
 	"github.com/docker/distribution/reference"
 )
 
+// parseReference parses the passed ImageReference, returnning an image.Named
+// if possible, or an error if not.
 func parseReference(image string) (reference.Named, error) {
 	var namedRef reference.Named
 	var ok bool

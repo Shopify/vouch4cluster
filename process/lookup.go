@@ -4,13 +4,10 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"strings"
 	"time"
 
 	"github.com/Shopify/vouch4cluster/listers"
-	"github.com/Shopify/voucher"
 	"github.com/Shopify/voucher/auth/google"
-	"github.com/Shopify/voucher/client"
 )
 
 // LookupAndAttest takes a listers.ImageLister and handles them, writing the output
@@ -27,80 +24,64 @@ func LookupAndAttest(cfg *VoucherConfig, lister listers.ImageLister, output io.W
 		fmt.Printf("listing images failed: %s\n", err)
 	}
 
-	processor := processor{
-		ctx:  ctx,
-		auth: auth,
+	processor := Processor{
+		ctx:    ctx,
+		auth:   auth,
+		config: cfg,
 	}
+
+	finalResults := new(Result)
 
 	totalImages := len(images)
 
+	inputChan := make(chan workerInput, totalImages)
+	resultsChan := make(chan *Result, totalImages)
+
+	workers := 100
+
+	if workers > totalImages {
+		workers = totalImages
+	}
+
+	for i := 1; i <= workers; i++ {
+		go worker(i, &processor, inputChan, resultsChan)
+	}
+
+	// registering images to check
 	for i, image := range images {
-		fmt.Printf("- handling image (%d/%d)\n", i+1, totalImages)
-		vClient, err := newVoucherClient(ctx, cfg)
+		fmt.Printf("- registering image (%d/%d)\n", i+1, totalImages)
+		in := workerInput{
+			id:    i + 1,
+			image: image,
+		}
+		inputChan <- in
+	}
+	close(inputChan)
+
+	for i := 1; i <= totalImages; i++ {
+		finalResults.Combine(<-resultsChan)
+		fmt.Printf("- got result of image (%d/%d)\n", i+1, totalImages)
+	}
+
+	finalResults.Write(output)
+	return nil
+}
+
+func worker(id int, processor *Processor, inputChan <-chan workerInput, resultsChan chan<- *Result) {
+	for input := range inputChan {
+		fmt.Printf("- worker %d handling job %d\n", id, input.id)
+
+		vClient, err := newVoucherClient(processor.ctx, processor.config)
 		if nil != err {
 			fmt.Printf("   - could not setup client: %s\n", err)
 		}
 
-		err = processor.Process(vClient, image)
+		processResult, err := processor.Process(vClient, input.image)
 		if nil != err {
-			fmt.Printf("  - processing image \"%s\" failed: %s\n", image, err)
+			fmt.Printf("  - processing image \"%s\" failed: %s\n", input.image, err)
 		}
+		fmt.Printf("- worker %d completed job %d\n", id, input.id)
 
+		resultsChan <- processResult
 	}
-
-	_ = writeProcessResult(&processor, output)
-	return nil
-}
-
-// processor handles the images returned by the ImageLister.
-type processor struct {
-	ctx           context.Context
-	auth          voucher.Auth
-	successes     []voucher.CheckResult
-	failures      []voucher.CheckResult
-	unprocessible []string
-	thirdParty    []string
-}
-
-// processImage processes the passed image.
-func (p *processor) Process(vClient *client.VoucherClient, image string) error {
-	if !strings.HasPrefix(image, "gcr.io/") {
-		p.thirdParty = append(p.thirdParty, image)
-		return nil
-	}
-
-	namedRef, err := parseReference(image)
-	if nil != err {
-		p.unprocessible = append(p.unprocessible, image)
-		return fmt.Errorf("getting reference failed: %s", err)
-	}
-
-	authClient, err := voucher.AuthToClient(p.ctx, p.auth, namedRef)
-	if nil != err {
-		p.unprocessible = append(p.unprocessible, image)
-		return fmt.Errorf("creating authenticated client failed: %s", err)
-	}
-
-	canonicalRef, err := getCanonicalReference(authClient, namedRef)
-	if nil != err {
-		p.unprocessible = append(p.unprocessible, image)
-		return fmt.Errorf("getting image digest failed: %s", err)
-	}
-
-	voucherResp, err := vClient.Check("all", canonicalRef)
-	if nil != err {
-		p.unprocessible = append(p.unprocessible, image)
-		return fmt.Errorf("signing image failed: %s", err)
-	}
-
-	for _, result := range voucherResp.Results {
-		result.ImageData = voucher.ImageData(canonicalRef)
-		if result.Attested {
-			p.successes = append(p.successes, result)
-		} else {
-			p.failures = append(p.failures, result)
-		}
-	}
-
-	return nil
 }

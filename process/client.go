@@ -14,12 +14,14 @@ type VoucherConfig struct {
 	Password string `json:"password"`
 }
 
+// newVoucherClient creates a new voucher.Client with the information passed
+// in the passed VoucherConfig.
 func newVoucherClient(ctx context.Context, cfg *VoucherConfig) (*client.VoucherClient, error) {
 	var timeout time.Duration = 120 * time.Second
 
 	deadline, hasDeadline := ctx.Deadline()
 	if hasDeadline {
-		timeout = deadline.Sub(time.Now())
+		timeout = time.Until(deadline)
 	}
 
 	client, err := client.NewClient(cfg.Hostname, timeout)
