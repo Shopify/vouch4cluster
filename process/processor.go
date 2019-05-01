@@ -57,7 +57,7 @@ func (p *Processor) LookupAndAttest() error {
 
 	for i := 1; i <= totalImages; i++ {
 		finalResults.Combine(<-p.results)
-		fmt.Printf("- got result of image (%d/%d)\n", i+1, totalImages)
+		fmt.Printf("- got result of image (%d/%d)\n", i, totalImages)
 	}
 
 	finalResults.Write(p.output)

@@ -42,6 +42,8 @@ func init() {
 	viper.BindPFlag("voucher.password", rootCmd.PersistentFlags().Lookup("password"))
 	rootCmd.PersistentFlags().IntVar(&defaultConfig.Workers, "workers", 100, "The number of workers to spawn to call Voucher with.")
 	viper.BindPFlag("voucher.workers", rootCmd.PersistentFlags().Lookup("workers"))
+	rootCmd.PersistentFlags().StringSliceVar(&defaultConfig.Checks, "checks", []string{"all"}, "The Voucher checks to require an image to pass.")
+	viper.BindPFlag("voucher.checks", rootCmd.PersistentFlags().Lookup("checks"))
 }
 
 // initConfig reads in config file and ENV variables if set.

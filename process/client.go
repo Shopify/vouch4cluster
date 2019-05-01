@@ -9,10 +9,11 @@ import (
 
 // VoucherConfig is a structure which contains voucher authentication information.
 type VoucherConfig struct {
-	Hostname string `json:"hostname"`
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Workers  int    `json:"workers"`
+	Hostname string   `json:"hostname"`
+	Username string   `json:"username"`
+	Password string   `json:"password"`
+	Workers  int      `json:"workers"`
+	Checks   []string `json:"checks"`
 }
 
 // newVoucherClient creates a new voucher.Client with the information passed

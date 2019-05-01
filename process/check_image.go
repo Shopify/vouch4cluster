@@ -28,13 +28,14 @@ func checkImage(p *Processor, image string) (*Result, error) {
 		return result, fmt.Errorf("getting image reference failed: %s", err)
 	}
 
-	voucherResp, err := vClient.Check("all", canonicalRef)
-	if nil != err {
-		result.AddUnprocessible(image)
-		return result, fmt.Errorf("signing image failed: %s", err)
+	for _, check := range p.config.Checks {
+		voucherResp, err := vClient.Check(check, canonicalRef)
+		if nil != err {
+			result.AddUnprocessible(image)
+			return result, fmt.Errorf("running check %s failed: %s", check, err)
+		}
+		addVoucherResponseToResult(&voucherResp, canonicalRef, result)
 	}
-
-	addVoucherResponseToResult(&voucherResp, canonicalRef, result)
 
 	return result, nil
 }
