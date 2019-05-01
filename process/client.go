@@ -12,6 +12,7 @@ type VoucherConfig struct {
 	Hostname string `json:"hostname"`
 	Username string `json:"username"`
 	Password string `json:"password"`
+	Workers  int    `json:"workers"`
 }
 
 // newVoucherClient creates a new voucher.Client with the information passed

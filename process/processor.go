@@ -3,54 +3,96 @@ package process
 import (
 	"context"
 	"fmt"
-	"strings"
+	"io"
 
+	"github.com/Shopify/vouch4cluster/listers"
 	"github.com/Shopify/voucher"
+	"github.com/Shopify/voucher/auth/google"
 	"github.com/Shopify/voucher/client"
 )
 
 // Processor handles the images returned by the ImageLister.
 type Processor struct {
-	ctx    context.Context
-	auth   voucher.Auth
-	config *VoucherConfig
+	ctx     context.Context
+	auth    voucher.Auth
+	config  *VoucherConfig
+	lister  listers.ImageLister
+	output  io.Writer
+	images  chan string
+	results chan *Result
 }
 
-// Process processes the passed image using the passed VoucherClient. Returns
-// a *Result or an error if something goes wrong.
-func (p *Processor) Process(vClient *client.VoucherClient, image string) (*Result, error) {
-	result := new(Result)
+// LookupAndAttest takes a listers.ImageLister and handles them, writing the output
+// of the results to the passed io.Writer.
+func (p *Processor) LookupAndAttest() error {
 
-	if !strings.HasPrefix(image, "gcr.io/") {
-		result.AddThirdParty(image)
-		return result, nil
-	}
-
-	namedRef, err := parseReference(image)
+	images, err := p.lister.List()
 	if nil != err {
-		result.AddUnprocessible(image)
-		return result, fmt.Errorf("getting reference failed: %s", err)
+		fmt.Printf("listing images failed: %s\n", err)
 	}
 
-	authClient, err := voucher.AuthToClient(p.ctx, p.auth, namedRef)
-	if nil != err {
-		result.AddUnprocessible(image)
-		return result, fmt.Errorf("creating authenticated client failed: %s", err)
+	finalResults := new(Result)
+
+	totalImages := len(images)
+
+	p.images = make(chan string, totalImages)
+	p.results = make(chan *Result, totalImages)
+
+	workers := p.config.Workers
+
+	if workers > totalImages {
+		workers = totalImages
 	}
 
-	canonicalRef, err := getCanonicalReference(authClient, namedRef)
-	if nil != err {
-		result.AddUnprocessible(image)
-		return result, fmt.Errorf("getting image digest failed: %s", err)
+	for i := 1; i <= workers; i++ {
+		go p.worker()
 	}
 
-	voucherResp, err := vClient.Check("all", canonicalRef)
-	if nil != err {
-		result.AddUnprocessible(image)
-		return result, fmt.Errorf("signing image failed: %s", err)
+	// registering images to check
+	for i, image := range images {
+		fmt.Printf("- registering image (%d/%d)\n", i+1, totalImages)
+		p.images <- image
+	}
+	close(p.images)
+
+	for i := 1; i <= totalImages; i++ {
+		finalResults.Combine(<-p.results)
+		fmt.Printf("- got result of image (%d/%d)\n", i+1, totalImages)
 	}
 
-	addVoucherResponseToResult(&voucherResp, canonicalRef, result)
+	finalResults.Write(p.output)
+	return nil
+}
 
-	return result, nil
+// newVoucherClient returns a new voucher client using the VoucherConfig and
+// context.Context specific to the Processor.
+func (p *Processor) newVoucherClient() (*client.VoucherClient, error) {
+	return newVoucherClient(p.ctx, p.config)
+}
+
+// worker is the function that handles image processing.
+func (p *Processor) worker() {
+	for image := range p.images {
+		result, err := checkImage(p, image)
+		if nil != err {
+			fmt.Printf("  - processing image \"%s\" failed: %s\n", image, err)
+		}
+
+		p.results <- result
+	}
+}
+
+// NewProcessor creates a new Processor,
+func NewProcessor(ctx context.Context, cfg *VoucherConfig, lister listers.ImageLister, output io.Writer) *Processor {
+	auth := google.NewAuth()
+
+	processor := Processor{
+		ctx:    ctx,
+		auth:   auth,
+		config: cfg,
+		lister: lister,
+		output: output,
+	}
+
+	return &processor
 }

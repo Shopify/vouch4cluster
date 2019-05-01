@@ -1,8 +1,10 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"os"
+	"time"
 
 	k8slister "github.com/Shopify/vouch4cluster/listers/kubernetes"
 	"github.com/Shopify/vouch4cluster/process"
@@ -43,7 +45,12 @@ var kubeCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		err = process.LookupAndAttest(cfg, k8slister.NewImageLister(client), os.Stdout)
+		ctx, cancel := context.WithTimeout(context.Background(), 3600*time.Second)
+		defer cancel()
+
+		processor := process.NewProcessor(ctx, cfg, k8slister.NewImageLister(client), os.Stdout)
+
+		err = processor.LookupAndAttest()
 		if nil != err {
 			fmt.Printf("attesting images failed: %s\n", err)
 			os.Exit(1)
