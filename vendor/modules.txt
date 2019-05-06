@@ -1,11 +1,12 @@
 # cloud.google.com/go v0.0.0-20160913182117-3b1ae45394a2
 cloud.google.com/go/compute/metadata
 cloud.google.com/go/internal
-# github.com/Shopify/voucher v0.0.0-20180928162150-38c7148dffda
+# github.com/Shopify/voucher v1.2.1
 github.com/Shopify/voucher
 github.com/Shopify/voucher/auth/google
 github.com/Shopify/voucher/client
 github.com/Shopify/voucher/docker
+github.com/Shopify/voucher/auth
 # github.com/docker/distribution v0.0.0-20180927214104-f3adfea35b77
 github.com/docker/distribution/reference
 github.com/docker/distribution/manifest/schema2
@@ -113,7 +114,7 @@ golang.org/x/crypto/openpgp/errors
 golang.org/x/crypto/openpgp/s2k
 golang.org/x/crypto/cast5
 golang.org/x/crypto/openpgp/elgamal
-# golang.org/x/net v0.0.0-20180724234803-3673e40ba225
+# golang.org/x/net v0.0.0-20181201002055-351d144fa1fc
 golang.org/x/net/http2
 golang.org/x/net/context
 golang.org/x/net/http/httpguts
