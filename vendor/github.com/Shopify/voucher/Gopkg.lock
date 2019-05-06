@@ -252,6 +252,14 @@
   version = "v1.0.1"
 
 [[projects]]
+  digest = "1:096a8a9182648da3d00ff243b88407838902b6703fc12657f76890e08d1899bf"
+  name = "github.com/mitchellh/go-homedir"
+  packages = ["."]
+  pruneopts = ""
+  revision = "ae18d6b8b3205b561c79e8e5f69bff09736185f4"
+  version = "v1.0.0"
+
+[[projects]]
   digest = "1:5219b4506253ccc598f9340677162a42d6a78f340a4cc6df2d62db4d0593c4e9"
   name = "github.com/mitchellh/mapstructure"
   packages = ["."]
@@ -405,7 +413,10 @@
 [[projects]]
   digest = "1:bc2a12c8863e1080226b7bc69192efd6c37aaa9b85cec508b0a8f54fabb9bd9f"
   name = "github.com/stretchr/testify"
-  packages = ["assert"]
+  packages = [
+    "assert",
+    "require",
+  ]
   pruneopts = ""
   revision = "f35b8ab0b5a2cef36673838d662e249dd9c94686"
   version = "v1.2.2"
@@ -641,18 +652,20 @@
     "github.com/Shopify/ejson",
     "github.com/coreos/clair/api/v1",
     "github.com/coreos/clair/database",
+    "github.com/docker/distribution",
     "github.com/docker/distribution/manifest/schema2",
     "github.com/docker/distribution/reference",
     "github.com/docker/docker/api/types",
     "github.com/golang/protobuf/proto",
     "github.com/googleapis/gax-go",
     "github.com/gorilla/mux",
+    "github.com/mitchellh/go-homedir",
     "github.com/opencontainers/go-digest",
     "github.com/sirupsen/logrus",
     "github.com/spf13/cobra",
-    "github.com/spf13/pflag",
     "github.com/spf13/viper",
     "github.com/stretchr/testify/assert",
+    "github.com/stretchr/testify/require",
     "golang.org/x/crypto/bcrypt",
     "golang.org/x/crypto/openpgp",
     "golang.org/x/crypto/openpgp/armor",
@@ -675,7 +688,9 @@
     "google.golang.org/genproto/googleapis/devtools/containeranalysis/v1beta1/provenance",
     "google.golang.org/genproto/googleapis/devtools/containeranalysis/v1beta1/vulnerability",
     "google.golang.org/grpc",
+    "google.golang.org/grpc/codes",
     "google.golang.org/grpc/credentials",
+    "google.golang.org/grpc/status",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
