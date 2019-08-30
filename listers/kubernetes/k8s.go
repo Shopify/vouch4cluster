@@ -2,7 +2,6 @@ package kubernetes
 
 import (
 	"github.com/Shopify/vouch4cluster/listers"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 )
 
@@ -11,31 +10,31 @@ type k8sImageLister struct {
 	client kubernetes.Interface
 }
 
+// k8sResourceLister is a function that lists images used by a resource.
+type k8sResourceLister func(kubernetes.Interface, string) ([]string, error)
+
 // List returns a list of all of the images available to the current Kubernetes context,
 // or an error.
 func (k *k8sImageLister) List() ([]string, error) {
-	pods, err := k.client.CoreV1().Pods("").List(metav1.ListOptions{})
-	if nil != err {
-		return []string{}, nil
-	}
 
-	allImages := make(map[string]struct{})
+	allImages := make([]string, 0, 100)
 
-	for _, pod := range pods.Items {
-		for _, status := range pod.Status.ContainerStatuses {
-			if _, ok := allImages[status.Image]; !ok {
-				allImages[status.Image] = struct{}{}
-			}
+	for _, resourceLister := range []k8sResourceLister{
+		listPods,
+		listJobs,
+	} {
+
+		resourceImages, err := resourceLister(k.client, "")
+		if nil != err {
+			return []string{}, err
 		}
+
+		allImages = append(allImages, resourceImages...)
+
 	}
 
-	uniqueImages := make([]string, 0, len(pods.Items))
-
-	for image := range allImages {
-		uniqueImages = append(uniqueImages, image)
-	}
-
-	return uniqueImages, err
+	images := combineAndReduce(allImages)
+	return images, nil
 }
 
 // NewImageLister creates a new Kubernetes specific ImageLister with the passed
