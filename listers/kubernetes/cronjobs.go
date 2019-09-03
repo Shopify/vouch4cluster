@@ -9,7 +9,6 @@ func listCronJobs(client kubernetes.Interface, namespace string) ([]string, erro
 	cronJobs, err := client.BatchV1beta1().
 		CronJobs(namespace).
 		List(metav1.ListOptions{})
-
 	if nil != err {
 		return []string{}, nil
 	}
