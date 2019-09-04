@@ -33,8 +33,7 @@ func (k *k8sImageLister) List() ([]string, error) {
 
 	}
 
-	images := combineAndReduce(allImages)
-	return images, nil
+	return uniqueImages(allImages), nil
 }
 
 // NewImageLister creates a new Kubernetes specific ImageLister with the passed
