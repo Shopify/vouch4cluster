@@ -1,17 +1,18 @@
 package kubernetes
 
-func combineAndReduce(list []string) []string {
+// uniqueImages returns a slice of the unique images in the passed list of
+// images.
+func uniqueImages(list []string) []string {
 
-	unique := make(map[string]bool, len(list))
+	imageExists := make(map[string]bool, len(list))
+	uniqueImages := make([]string, 0, len(list))
 
 	for _, item := range list {
-		unique[item] = true
+		if _, value := imageExists[item]; !value {
+			uniqueImages = append(uniqueImages, item)
+		}
+		imageExists[item] = true
 	}
 
-	images := make([]string, 0, len(unique))
-	for item := range unique {
-		images = append(images, item)
-	}
-
-	return images
+	return uniqueImages
 }
