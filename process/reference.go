@@ -6,6 +6,12 @@ import (
 	"github.com/docker/distribution/reference"
 )
 
+// parseReference parses the passed ImageReference, returnning an image.Named
+// if possible, or an error if not.
+//
+// This is used by the Processor to convert strings to image references, so
+// that we catch any invalidly formatted images before we try to submit them to
+// docker.
 func parseReference(image string) (reference.Named, error) {
 	var namedRef reference.Named
 	var ok bool

@@ -1,8 +1,10 @@
 package cmd
 
 import (
+	"context"
 	"io"
 	"os"
+	"time"
 
 	"github.com/Shopify/vouch4cluster/listers/reader"
 	"github.com/Shopify/vouch4cluster/process"
@@ -23,7 +25,12 @@ separated by newlines.`,
 
 		lister := reader.NewImageLister(inputReader)
 
-		err = process.LookupAndAttest(cfg, lister, os.Stdout)
+		ctx, cancel := context.WithTimeout(context.Background(), 3600*time.Second)
+		defer cancel()
+
+		processor := process.NewProcessor(ctx, cfg, lister, os.Stdout)
+
+		err = processor.LookupAndAttest()
 		if nil != err {
 			errorf("attesting images failed: %s", err)
 			os.Exit(1)
