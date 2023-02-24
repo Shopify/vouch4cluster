@@ -14,20 +14,13 @@ require (
 	github.com/docker/go-units v0.3.3 // indirect
 	github.com/fernet/fernet-go v0.0.0-20180830025343-9eac43b88a5e // indirect
 	github.com/ghodss/yaml v0.0.0-20150909031657-73d445a93680 // indirect
-	github.com/gogo/protobuf v0.0.0-20170330071051-c0656edd0d9e // indirect
 	github.com/golang/glog v0.0.0-20141105023935-44145f04b68c // indirect
 	github.com/google/btree v0.0.0-20160524151835-7d79101e329e // indirect
-	github.com/google/go-cmp v0.3.0 // indirect
-	github.com/google/gofuzz v0.0.0-20161122191042-44d81051d367 // indirect
-	github.com/googleapis/gnostic v0.0.0-20170729233727-0c5108395e2d // indirect
 	github.com/gregjones/httpcache v0.0.0-20170728041850-787624de3eb7 // indirect
 	github.com/imdario/mergo v0.3.5 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
-	github.com/json-iterator/go v0.0.0-20180612202835-f2b4162afba3 // indirect
 	github.com/julienschmidt/httprouter v1.2.0 // indirect
 	github.com/mitchellh/go-homedir v1.0.0
-	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
-	github.com/modern-go/reflect2 v0.0.0-20180320133207-05fbef0ca5da // indirect
 	github.com/opencontainers/go-digest v1.0.0-rc1
 	github.com/opencontainers/image-spec v0.0.0-20180918080442-7b1e489870ac // indirect
 	github.com/pborman/uuid v1.2.0 // indirect
@@ -42,9 +35,8 @@ require (
 	golang.org/x/sync v0.0.0-20190423024810-112230192c58 // indirect
 	golang.org/x/time v0.0.0-20161028155119-f51c12702a4d // indirect
 	google.golang.org/appengine v1.2.0 // indirect
-	gopkg.in/inf.v0 v0.9.0 // indirect
 	gotest.tools v2.2.0+incompatible // indirect
-	k8s.io/api v0.0.0-20180914000641-b9bd491cc8f2 // indirect
-	k8s.io/apimachinery v0.0.0-20180913025736-6dd46049f395
+	k8s.io/api v0.0.0-20180914000641-b9bd491cc8f2
+	k8s.io/apimachinery v0.15.7
 	k8s.io/client-go v0.0.0-20180919225554-3e32c8333043
 )
