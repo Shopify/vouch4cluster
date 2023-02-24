@@ -37,14 +37,13 @@ require (
 	github.com/sirupsen/logrus v1.4.1 // indirect
 	github.com/spf13/cobra v0.0.0-20180915222204-8d114be902bc
 	github.com/spf13/viper v0.0.0-20180928080504-8e194e8ad243
-	golang.org/x/crypto v0.0.0-20180904163835-0709b304e793 // indirect
+	golang.org/x/crypto v0.1.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20170412232759-a6bd8cefa181 // indirect
-	golang.org/x/sync v0.0.0-20190423024810-112230192c58 // indirect
 	golang.org/x/time v0.0.0-20161028155119-f51c12702a4d // indirect
 	google.golang.org/appengine v1.2.0 // indirect
 	gopkg.in/inf.v0 v0.9.0 // indirect
 	gotest.tools v2.2.0+incompatible // indirect
-	k8s.io/api v0.0.0-20180914000641-b9bd491cc8f2 // indirect
+	k8s.io/api v0.0.0-20180914000641-b9bd491cc8f2
 	k8s.io/apimachinery v0.0.0-20180913025736-6dd46049f395
 	k8s.io/client-go v0.0.0-20180919225554-3e32c8333043
 )
