@@ -8,7 +8,7 @@ require (
 	github.com/Shopify/voucher v1.2.1
 	github.com/coreos/clair v2.0.8+incompatible // indirect
 	github.com/coreos/pkg v0.0.0-20180928190104-399ea9e2e55f // indirect
-	github.com/docker/distribution v0.0.0-20180927214104-f3adfea35b77
+	github.com/docker/distribution v2.8.0+incompatible
 	github.com/docker/docker v0.0.0-20180928132037-deac65c92950 // indirect
 	github.com/docker/go-connections v0.0.0-20180821093606-97c2040d34df // indirect
 	github.com/docker/go-units v0.3.3 // indirect
@@ -44,7 +44,7 @@ require (
 	google.golang.org/appengine v1.2.0 // indirect
 	gopkg.in/inf.v0 v0.9.0 // indirect
 	gotest.tools v2.2.0+incompatible // indirect
-	k8s.io/api v0.0.0-20180914000641-b9bd491cc8f2 // indirect
+	k8s.io/api v0.0.0-20180914000641-b9bd491cc8f2
 	k8s.io/apimachinery v0.0.0-20180913025736-6dd46049f395
 	k8s.io/client-go v0.0.0-20180919225554-3e32c8333043
 )
