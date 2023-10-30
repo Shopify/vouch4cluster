@@ -14,6 +14,7 @@ type ClusterInfo struct {
 	RootRotationInProgress bool
 	DefaultAddrPool        []string
 	SubnetSize             uint32
+	DataPathPort           uint32
 }
 
 // Swarm represents a swarm.
@@ -153,6 +154,7 @@ type InitRequest struct {
 	ListenAddr       string
 	AdvertiseAddr    string
 	DataPathAddr     string
+	DataPathPort     uint32
 	ForceNewCluster  bool
 	Spec             Spec
 	AutoLockManagers bool
@@ -207,6 +209,18 @@ type Info struct {
 	Managers       int `json:",omitempty"`
 
 	Cluster *ClusterInfo `json:",omitempty"`
+
+	Warnings []string `json:",omitempty"`
+}
+
+// Status provides information about the current swarm status and role,
+// obtained from the "Swarm" header in the API response.
+type Status struct {
+	// NodeState represents the state of the node.
+	NodeState LocalNodeState
+
+	// ControlAvailable indicates if the node is a swarm manager.
+	ControlAvailable bool
 }
 
 // Peer represents a peer.
